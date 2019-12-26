@@ -436,5 +436,96 @@ public class GraphicsDisplay extends JPanel {
 
     }
 
+    public class MouseHandler extends MouseAdapter {
+        public MouseHandler() {
+        }
+        public void mouseClicked(MouseEvent ev) {
+            if (ev.getButton() == 3) {
+                if (undoHistory.size() > 0)
+                {
+                    viewport = ((double[][])undoHistory.get(undoHistory.size() - 1));
+
+                    undoHistory.remove(undoHistory.size() - 1);
+                } else {
+                    zoomToRegion(minX, maxY, maxX, minY);
+                }
+                repaint();
+            }
+        }
+
+        public void mousePressed(MouseEvent ev) {
+            if (ev.getButton() != 1) return;
+            selectedMarker = findSelectedPoint(ev.getX(), ev.getY());
+            originalPoint = translatePointToXY(ev.getX(), ev.getY());
+            if (selectedMarker >= 0) {
+                changeMode = true;
+                setCursor(Cursor.getPredefinedCursor(8));
+            } else {
+                scaleMode = true;
+                setCursor(Cursor.getPredefinedCursor(5));
+                selectionRect.setFrame(ev.getX(), ev.getY(), 1.0D, 1.0D);
+            }
+        }
+
+        public void mouseReleased(MouseEvent ev) {
+            if (ev.getButton() != 1) return;
+
+            setCursor(Cursor.getPredefinedCursor(0));
+            if (changeMode) {
+                changeMode = false;
+            } else {
+                scaleMode = false;
+                double[] finalPoint = translatePointToXY(ev.getX(), ev.getY());
+                undoHistory.add(viewport);
+                viewport = new double[2][2];
+                zoomToRegion(originalPoint[0], originalPoint[1], finalPoint[0], finalPoint[1]);
+                repaint();
+            }
+        }
+    }
+
+    // Оброботчик движения мыши
+    public class MouseMotionHandler implements MouseMotionListener {
+
+        public void mouseDragged(MouseEvent ev) {
+            if (changeMode) {
+                //Добавить поворот (при)
+                double[] currentPoint = translatePointToXY(ev.getX(), ev.getY());
+                double newY = ((Double[])graphicsData.get(selectedMarker))[1].doubleValue() +
+                        (currentPoint[1] - ((Double[])graphicsData.get(selectedMarker))[1].doubleValue());
+                if (newY > viewport[0][1]) {
+                    newY = viewport[0][1];
+                }
+                if (newY < viewport[1][1]) {
+                    newY = viewport[1][1];
+                }
+                ((Double[])graphicsData.get(selectedMarker))[1] = Double.valueOf(newY);
+                repaint();
+            } else {
+                double width = ev.getX() - selectionRect.getX();
+                if (width < 5.0D) {
+                    width = 5.0D;
+                }
+                double height = ev.getY() - selectionRect.getY();
+                if (height < 5.0D) {
+                    height = 5.0D;
+                }
+                selectionRect.setFrame(selectionRect.getX(), selectionRect.getY(), width, height);
+                repaint();
+            }
+        }
+
+        //перемещения мыши
+        public void mouseMoved(MouseEvent ev) {
+            selectedMarker = findSelectedPoint(ev.getX(), ev.getY());
+            if (selectedMarker >= 0)
+                setCursor(Cursor.getPredefinedCursor(8));
+            else {
+                setCursor(Cursor.getPredefinedCursor(0));
+            }
+            repaint();
+        }
+
+    }
 
 }
