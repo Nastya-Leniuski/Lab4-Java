@@ -73,4 +73,68 @@ public class GraphicsDisplay extends JPanel {
         labelsFont = new java.awt.Font("Serif",0,10);
         addMouseMotionListener(new MouseMotionHandler());
         addMouseListener(new MouseHandler());
-    } }
+
+    }
+    public void showGraphics(ArrayList<Double[]> graphicsData)	{
+        this.graphicsData = graphicsData;
+
+
+        this.originalData = new ArrayList(graphicsData.size());
+        for (Double[] point : graphicsData) {
+            Double[] newPoint = new Double[2];
+            newPoint[0] = new Double(point[0].doubleValue());
+            newPoint[1] = new Double(point[1].doubleValue());
+            this.originalData.add(newPoint);
+        }
+        this.minX = ((Double[])graphicsData.get(0))[0].doubleValue();
+        this.maxX = ((Double[])graphicsData.get(graphicsData.size() - 1))[0].doubleValue();
+        this.minY = ((Double[])graphicsData.get(0))[1].doubleValue();
+        this.maxY = this.minY;
+
+        for (int i = 1; i < graphicsData.size(); i++) {
+            if (((Double[])graphicsData.get(i))[1].doubleValue() < this.minY) {
+                this.minY = ((Double[])graphicsData.get(i))[1].doubleValue();
+            }
+            if (((Double[])graphicsData.get(i))[1].doubleValue() > this.maxY) {
+                this.maxY = ((Double[])graphicsData.get(i))[1].doubleValue();
+            }
+        }
+
+        zoomToRegion(minX, maxY, maxX, minY);
+
+    }
+
+    public void zoomToRegion(double x1,double y1,double x2,double y2)	{
+        this.viewport[0][0]=x1;
+        this.viewport[0][1]=y1;
+        this.viewport[1][0]=x2;
+        this.viewport[1][1]=y2;
+        this.repaint();
+    }
+    public void setShowAxis(boolean showAxis) {
+        this.showAxis = showAxis;
+        repaint();
+    }
+
+    public void setShowMarkers(boolean showMarkers) {
+        this.showMarkers = showMarkers;
+        repaint();
+    }
+
+    protected Point2D.Double xyToPoint(double x, double y) {
+        double deltaX = x - viewport[0][0];
+        double deltaY = viewport[0][1] - y;
+        return new Point2D.Double(deltaX*scaleX, deltaY*scaleY);
+    }
+
+    protected double[] translatePointToXY(int x, int y)
+    {
+        return new double[] { this.viewport[0][0] + x / this.scaleX, this.viewport[0][1] - y / this.scaleY };
+    }
+
+    protected Point2D.Double shiftPoint(Point2D.Double src, double deltaX, double deltaY) {
+        Point2D.Double dest = new Point2D.Double();
+        dest.setLocation(src.getX() + deltaX, src.getY() + deltaY);
+        return dest;
+    }
+}
