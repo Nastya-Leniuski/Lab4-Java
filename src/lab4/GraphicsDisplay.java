@@ -137,4 +137,26 @@ public class GraphicsDisplay extends JPanel {
         dest.setLocation(src.getX() + deltaX, src.getY() + deltaY);
         return dest;
     }
+
+    protected void paintGrid (Graphics2D canvas) {
+        canvas.setStroke(gridStroke);
+        canvas.setColor(Color.GRAY);
+        // Сетка
+        double pos = viewport[0][0];;
+        double step = (viewport[1][0] - viewport[0][0])/10;
+
+        while (pos < viewport[1][0]){
+            canvas.draw(new Line2D.Double(xyToPoint(pos, viewport[0][1]), xyToPoint(pos, viewport[1][1])));
+            pos += step;
+        }
+        canvas.draw(new Line2D.Double(xyToPoint(viewport[1][0],viewport[0][1]), xyToPoint(viewport[1][0],viewport[1][1])));
+
+        pos = viewport[1][1];
+        step = (viewport[0][1] - viewport[1][1]) / 10;
+        while (pos < viewport[0][1]){
+            canvas.draw(new Line2D.Double(xyToPoint(viewport[0][0], pos), xyToPoint(viewport[1][0], pos)));
+            pos=pos + step;
+        }
+        canvas.draw(new Line2D.Double(xyToPoint(viewport[0][0],viewport[0][1]), xyToPoint(viewport[1][0],viewport[0][1])));
+    }
 }
