@@ -380,4 +380,61 @@ public class GraphicsDisplay extends JPanel {
     }
 
 
+    // Устанавливаем значения по часовой стрелки
+    public void setClockRotate(boolean clockRotate) {
+        this.clockRotate = clockRotate;
+        repaint();
+    }
+
+    // Устанавливаем значения проив часовой стрелки
+    public void setAntiClockRotate(boolean antiClockRotate) {
+        this.antiClockRotate = antiClockRotate;
+        repaint();
+    }
+
+    // По часовой стрелке
+    public boolean isClockRotate() {
+        return clockRotate;
+    }
+
+    // Поворот против часовой стрелки
+    public boolean isAntiClockRotate() {
+        return antiClockRotate;
+    }
+
+    // Сбрасываем изменения
+    public void reset() {
+        showGraphics(this.originalData);
+    }
+
+    //Приближаем
+    protected int findSelectedPoint(int x, int y)
+    {
+        if (graphicsData == null) return -1;
+        int pos = 0;
+        for (Double[] point : graphicsData) {
+            Point2D.Double screenPoint = xyToPoint(point[0].doubleValue(), point[1].doubleValue());
+            double distance = (screenPoint.getX() - x) * (screenPoint.getX() - x) + (screenPoint.getY() - y) * (screenPoint.getY() - y);
+            if (distance < 100) return pos;
+            pos++;
+        }	    return -1;
+    }
+
+    public void saveToTextFile(File selectedFile)	{
+        try{
+            PrintStream out = new PrintStream(selectedFile);
+            out.println("Результаты скорректированых значений");
+            for (Double[] point : graphicsData){
+                out.println(point[0] + " " + point[1]);
+            }
+
+            out.close();
+
+        }catch (FileNotFoundException e){
+
+        }
+
+    }
+
+
 }
