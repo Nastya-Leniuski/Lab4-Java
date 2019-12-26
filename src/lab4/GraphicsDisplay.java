@@ -212,4 +212,79 @@ public class GraphicsDisplay extends JPanel {
         }
     }
 
+    protected void paintMarkers(Graphics2D canvas) {
+        canvas.setStroke(this.markerStroke);
+        canvas.setColor(Color.RED);
+        canvas.setPaint(Color.RED);
+        GeneralPath lastMarker = null;
+        int i = -1;
+        for (Double[] point : graphicsData) {
+            i++;
+
+            if(isSpecialPoint(point[1]) == true)
+                canvas.setColor(Color.GREEN);
+            else
+                canvas.setColor(Color.RED);
+
+            // Маркеры
+            GeneralPath star = new GeneralPath();
+            Point2D.Double center = xyToPoint(point[0], point[1]);
+            star.moveTo(center.getX(), center.getY());
+            star.lineTo(star.getCurrentPoint().getX(), star.getCurrentPoint().getY()-5);
+            star.moveTo(star.getCurrentPoint().getX() - 3, star.getCurrentPoint().getY());
+            star.lineTo(star.getCurrentPoint().getX() + 6, star.getCurrentPoint().getY());
+            star.moveTo(center.getX(), center.getY());
+            star.lineTo(star.getCurrentPoint().getX(), star.getCurrentPoint().getY()+5);
+            star.moveTo(star.getCurrentPoint().getX() - 3, star.getCurrentPoint().getY());
+            star.lineTo(star.getCurrentPoint().getX() + 6, star.getCurrentPoint().getY());
+            star.moveTo(center.getX(), center.getY());
+            star.lineTo(star.getCurrentPoint().getX() - 5, star.getCurrentPoint().getY());
+            star.moveTo(star.getCurrentPoint().getX(), star.getCurrentPoint().getY()-3);
+            star.lineTo(star.getCurrentPoint().getX(), star.getCurrentPoint().getY()+6);
+            star.moveTo(center.getX(), center.getY());
+            star.lineTo(star.getCurrentPoint().getX() + 5, star.getCurrentPoint().getY());
+            star.moveTo(star.getCurrentPoint().getX(), star.getCurrentPoint().getY()-3);
+            star.lineTo(star.getCurrentPoint().getX(), star.getCurrentPoint().getY()+6);
+            if (i == this.selectedMarker)
+            {
+                lastMarker = star;
+            }
+            else {
+                canvas.draw(star);
+                canvas.fill(star);
+            }
+        }
+
+        if (lastMarker != null) {
+            canvas.setColor(Color.BLUE);
+            canvas.setPaint(Color.BLUE);
+            canvas.draw(lastMarker);
+            canvas.fill(lastMarker);
+        }
+    }
+
+    protected boolean isSpecialPoint(double y){
+        //раскраска маркеров по условию
+        int Yint = (int)y;
+        boolean flag = false;
+
+        for(int i = 0; i < Yint; i++)
+        {
+            if (Yint%2 == 0)
+            {
+                if(Yint >= 10)
+                    Yint /= 10;
+                else{
+                    flag = true;
+                    break;}
+            }
+            else{
+                flag = false;
+                break;}
+        }
+
+        return flag;
+    }
+
+
 }
