@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="097ab8bb-21c6-43cc-a178-b2c00a3c5a53" name="Default Changelist" comment="" />
+    <list default="true" id="097ab8bb-21c6-43cc-a178-b2c00a3c5a53" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/src/lab4/GraphicsDisplay.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/lab4/GraphicsDisplay.java" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
