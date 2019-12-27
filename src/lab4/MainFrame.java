@@ -79,7 +79,7 @@ public class MainFrame extends JFrame {
         JMenu graphicsMenu = new JMenu("График");
         menuBar.add(graphicsMenu);
 
-        Action rotatesShapeClockAction = new AbstractAction("Повернуть по часовой стрелке") {
+        /*Action rotatesShapeClockAction = new AbstractAction("Повернуть по часовой стрелке") {
 
             public void actionPerformed(ActionEvent e) {
                 if(display.isClockRotate()){
@@ -92,7 +92,7 @@ public class MainFrame extends JFrame {
         shapeRotateClockItem = new JCheckBoxMenuItem(rotatesShapeClockAction);
         graphicsMenu.add(shapeRotateClockItem);
         graphicsMenu.addSeparator();
-
+*/
         Action rotatesShapeAntiClockAction = new AbstractAction("Повернуть ВЛЕВО") {
             public void actionPerformed(ActionEvent e) {
                 if(display.isAntiClockRotate())
